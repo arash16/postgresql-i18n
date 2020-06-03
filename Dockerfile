@@ -8,5 +8,6 @@ RUN mkdir -p /app/dist/tdata/ && \
     node index.js
 
 FROM lovearuis/postgres-postgis-plv8-mysql_fdw:12
+RUN apt-get install -y postgresql-12-rum
 COPY --from=gen /app/dist/tdata/* /usr/share/postgresql/12/tsearch_data/
 COPY --from=gen /app/dist/setup.sql /docker-entrypoint-initdb.d/
