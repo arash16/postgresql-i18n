@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "description": "PostgreSQL dictionaries for many languages",
   "main": "index.js",
-  "author": "Arash Shakery",
+  "author": "Arash Shakery <arash.shakery@gmail.com> (arash16.com)",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/arash16/postgresql-i18n.git"
   },
+  "keywords": [
+  	"postgresql",
+    "hunspell",
+    "i18n",
+    "plv8"
+  ],
   "dependencies": {
     "dictionary-bg": "*",
     "dictionary-br": "*",
