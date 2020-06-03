@@ -36,15 +36,19 @@ const allLangs = Object.keys({
 
 function writeDictFiles(lang) {
   return new Promise(resolve => {
-    dicts.fa((err, result) => {
-      if (err || !result) {
-        resolve(false);
-      }
+    if (!dicts[lang]) {
+      resolve(false);
+    } else {
+      dicts[lang]((err, result) => {
+        if (err || !result) {
+          resolve(false);
+        }
 
-      fs.writeFileSync(`dist/tdata/${lang}.dict`, result.dic);
-      fs.writeFileSync(`dist/tdata/${lang}.affix`, result.aff);
-      resolve(true);
-    });
+        fs.writeFileSync(`dist/tdata/${lang}.dict`, result.dic);
+        fs.writeFileSync(`dist/tdata/${lang}.affix`, result.aff);
+        resolve(true);
+      });
+    }
   });
 }
 
@@ -97,6 +101,46 @@ WITH unaccent${hasDic ? `, ${lang}_hunspell` : ''}, ${lang}_stem;
 
 `;
   }
+
+  fs.writeFileSync(
+    'dist/tdata/all3.stop',
+    [
+      ...new Set(
+        [].concat(
+          ...Object.entries(stopwords)
+            .filter(([k]) => k != 'zh')
+            .map(([, l]) => l),
+        ),
+      ),
+    ].join('\n'),
+  );
+  sql += `
+DROP TEXT SEARCH DICTIONARY IF EXISTS stop_all;
+CREATE TEXT SEARCH DICTIONARY stop_all (
+  TEMPLATE = simple,
+  StopWords = all3
+);
+
+DROP TEXT SEARCH CONFIGURATION IF EXISTS unaccent_stop;
+CREATE TEXT SEARCH CONFIGURATION "unaccent_stop" (
+  COPY = simple
+);
+
+ALTER TEXT SEARCH CONFIGURATION "unaccent_stop" ALTER MAPPING
+FOR asciiword, asciihword, hword_asciipart, word, hword, hword_part
+WITH unaccent, stop_all;
+
+-------------------------------------------------------------------------------
+
+DROP TEXT SEARCH CONFIGURATION IF EXISTS "unaccent";
+CREATE TEXT SEARCH CONFIGURATION "unaccent" (
+  COPY = simple
+);
+
+ALTER TEXT SEARCH CONFIGURATION "unaccent" ALTER MAPPING
+FOR asciiword, asciihword, hword_asciipart, word, hword, hword_part
+WITH unaccent, simple;
+`;
 
   fs.writeFileSync('dist/setup.sql', sql);
 }
