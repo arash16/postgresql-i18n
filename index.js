@@ -44,8 +44,17 @@ function writeDictFiles(lang) {
           resolve(false);
         }
 
-        fs.writeFileSync(`dist/tdata/${lang}.dict`, result.dic);
-        fs.writeFileSync(`dist/tdata/${lang}.affix`, result.aff);
+        const dic = result.dic.toString('utf8');
+        let aff = result.aff.toString('utf8').replace(/FLAG UTF-8/gi, '');
+
+        if (lang === 'cs') {
+          const lines = aff.split('\n');
+          lines[2118] += ']';
+          aff = lines.join('\n');
+        }
+
+        fs.writeFileSync(`dist/tdata/${lang}.dict`, dic);
+        fs.writeFileSync(`dist/tdata/${lang}.affix`, aff);
         resolve(true);
       });
     }

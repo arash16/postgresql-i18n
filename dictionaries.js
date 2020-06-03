@@ -3,7 +3,7 @@ module.exports = {
   br: require('dictionary-br'), // Breton
   ca: require('dictionary-ca'), // Catalan
   cs: require('dictionary-cs'), // Czech
-  da: require('dictionary-da'), // Danish
+  // da: require('dictionary-da'), // Danish
   de: require('dictionary-de'), // German
   el: require('dictionary-el'), // Modern Greek
   en: require('dictionary-en'), // English
@@ -17,10 +17,10 @@ module.exports = {
   fy: require('dictionary-fy'), // Frisian 730k
   ga: require('dictionary-ga'), // Irish
   gd: require('dictionary-gd'), // Gaelic 64k
-  gl: require('dictionary-gl'), // Galician
+  // gl: require('dictionary-gl'), // Galician
   he: require('dictionary-he'), // Hebrew
   hr: require('dictionary-hr'), // Croatian
-  hu: require('dictionary-hu'), // Hungarian
+  // hu: require('dictionary-hu'), // Hungarian
   hy: require('dictionary-hy'), // Armenian
   ia: require('dictionary-ia'), // Interlingua 300k
   ie: require('dictionary-ie'), // Interlingue (or Occidental) 300k
@@ -36,7 +36,7 @@ module.exports = {
   mn: require('dictionary-mn'), // Mongolian 2M
   nb: require('dictionary-nb'), // Norwegian Bokmål 5M
   ne: require('dictionary-ne'), // Nepali 16M
-  nl: require('dictionary-nl'), // Dutch
+  // nl: require('dictionary-nl'), // Dutch
   nn: require('dictionary-nn'), // Norwegian Nynorsk 5M
   pl: require('dictionary-pl'), // Polish
   pt: require('dictionary-pt'), // Portuguese
