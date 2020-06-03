@@ -62,7 +62,7 @@ function writeDictFiles(lang) {
 }
 
 async function generateAll() {
-  let sql = 'CREATE EXTENSION IF NOT EXISTS unaccent;\n';
+  let sql = 'CREATE EXTENSION IF NOT EXISTS unaccent WITH SCHEMA pg_catalog;\n';
 
   for (const lang of allLangs) {
     if (stopwords[lang]) {
@@ -77,8 +77,8 @@ async function generateAll() {
 
     if (hasDic) {
       sql += `
--- DROP TEXT SEARCH DICTIONARY IF EXISTS ${lang}_hunspell CASCADE;
-CREATE TEXT SEARCH DICTIONARY ${lang}_hunspell (
+-- DROP TEXT SEARCH DICTIONARY IF EXISTS pg_catalog.${lang}_hunspell CASCADE;
+CREATE TEXT SEARCH DICTIONARY pg_catalog.${lang}_hunspell (
   template = ispell,
   ${stopsConf}
   DictFile = ${lang},
@@ -87,8 +87,8 @@ CREATE TEXT SEARCH DICTIONARY ${lang}_hunspell (
     }
 
     sql += `
--- DROP TEXT SEARCH DICTIONARY IF EXISTS ${lang}_stem CASCADE;
-CREATE TEXT SEARCH DICTIONARY ${lang}_stem (
+-- DROP TEXT SEARCH DICTIONARY IF EXISTS pg_catalog.${lang}_stem CASCADE;
+CREATE TEXT SEARCH DICTIONARY pg_catalog.${lang}_stem (
   ${stopsConf}
   TEMPLATE = ${
     snowballStemmers[lang]
@@ -98,12 +98,12 @@ CREATE TEXT SEARCH DICTIONARY ${lang}_stem (
   }
 );
 
--- DROP TEXT SEARCH CONFIGURATION IF EXISTS "${lang}" CASCADE;
-CREATE TEXT SEARCH CONFIGURATION "${lang}" (
+-- DROP TEXT SEARCH CONFIGURATION IF EXISTS pg_catalog."${lang}" CASCADE;
+CREATE TEXT SEARCH CONFIGURATION pg_catalog."${lang}" (
   COPY = simple
 );
 
-ALTER TEXT SEARCH CONFIGURATION "${lang}" ALTER MAPPING
+ALTER TEXT SEARCH CONFIGURATION pg_catalog."${lang}" ALTER MAPPING
 FOR asciiword, asciihword, hword_asciipart, word, hword, hword_part
 WITH unaccent${hasDic ? `, ${lang}_hunspell` : ''}, ${lang}_stem;
 -------------------------------------------------------------------------------
@@ -124,29 +124,29 @@ WITH unaccent${hasDic ? `, ${lang}_hunspell` : ''}, ${lang}_stem;
     ].join('\n'),
   );
   sql += `
-DROP TEXT SEARCH DICTIONARY IF EXISTS stop_all;
-CREATE TEXT SEARCH DICTIONARY stop_all (
+  -- DROP TEXT SEARCH DICTIONARY IF EXISTS pg_catalog.stop_all;
+CREATE TEXT SEARCH DICTIONARY pg_catalog.stop_all (
   TEMPLATE = simple,
   StopWords = all3
 );
 
-DROP TEXT SEARCH CONFIGURATION IF EXISTS unaccent_stop;
-CREATE TEXT SEARCH CONFIGURATION "unaccent_stop" (
+-- DROP TEXT SEARCH CONFIGURATION IF EXISTS pg_catalog.unaccent_stop;
+CREATE TEXT SEARCH CONFIGURATION pg_catalog."unaccent_stop" (
   COPY = simple
 );
 
-ALTER TEXT SEARCH CONFIGURATION "unaccent_stop" ALTER MAPPING
+ALTER TEXT SEARCH CONFIGURATION pg_catalog."unaccent_stop" ALTER MAPPING
 FOR asciiword, asciihword, hword_asciipart, word, hword, hword_part
 WITH unaccent, stop_all;
 
 -------------------------------------------------------------------------------
 
-DROP TEXT SEARCH CONFIGURATION IF EXISTS "unaccent";
-CREATE TEXT SEARCH CONFIGURATION "unaccent" (
+-- DROP TEXT SEARCH CONFIGURATION IF EXISTS pg_catalog."unaccent";
+CREATE TEXT SEARCH CONFIGURATION pg_catalog."unaccent" (
   COPY = simple
 );
 
-ALTER TEXT SEARCH CONFIGURATION "unaccent" ALTER MAPPING
+ALTER TEXT SEARCH CONFIGURATION pg_catalog."unaccent" ALTER MAPPING
 FOR asciiword, asciihword, hword_asciipart, word, hword, hword_part
 WITH unaccent, simple;
 `;
