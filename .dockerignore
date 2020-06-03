@@ -1,0 +1,9 @@
+Dockerfile
+node_modules
+dist
+.dockerignore
+.editorconfig
+.eslintrc.js
+.git
+.gitignore
+.prettierrc

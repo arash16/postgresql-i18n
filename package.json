@@ -1,10 +1,14 @@
 {
-  "name": "multinational-postgres",
+  "name": "postgresql-i18n",
   "version": "1.0.0",
   "description": "PostgreSQL dictionaries for many languages",
   "main": "index.js",
   "author": "Arash Shakery",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arash16/postgresql-i18n.git"
+  },
   "dependencies": {
     "dictionary-bg": "*",
     "dictionary-br": "*",
